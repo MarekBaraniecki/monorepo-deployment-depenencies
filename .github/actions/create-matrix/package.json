@@ -1,0 +1,23 @@
+{
+  "name": "jobs-matrix",
+  "version": "1.0.0",
+  "description": "Look for changes in the codebase and defined deployment dependencies to create package directories jobs matrix",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "eslint src/**/*.ts --no-ignore && eslint index.ts --no-ignore",
+    "lint:fix": "eslint src/**/*.ts --no-ignore --fix && eslint index.ts --fix --no-ignore",
+    "build": "tsc --noEmit && node esbuild.config.js",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --collectCoverage --runInBand"
+  },
+  "engines": {
+    "node": ">=16.10.0"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/exec": "^1.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.3"
+  }
+}

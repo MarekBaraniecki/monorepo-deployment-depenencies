@@ -1,0 +1,24 @@
+name: Proxy
+#This is a proxy workflow, that is needed because 'uses' must be a static value in GHA actions
+#it is currently not possible to parametrize this, so various deployments need to spelled out statically in an if statement
+on:
+  workflow_call:
+    inputs:
+      deployment-directory:
+        required: true
+        type: string
+
+jobs:
+ deploy-app-1:
+    name: Deploy
+    if: inputs.deployment-directory == 'apps/app-1'
+    uses: ".github/workflows/deploy-app-1.yml"
+ deploy-app-2:
+    name: Deploy
+    if: inputs.deployment-directory == 'apps/app-2'
+    uses: ".github/workflows/deploy-app-1.yml"
+ deploy-app-3:
+    name: Deploy
+    if: inputs.deployment-directory == 'apps/app-3'
+    uses: ".github/workflows/deploy-app-1.yml"
+#etc

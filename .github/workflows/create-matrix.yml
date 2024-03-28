@@ -1,0 +1,26 @@
+name: Create jobs matrix for deployment
+
+on:
+  workflow_call:
+    outputs:
+      job-matrix:
+        description: "Directory-based jobs matrix"
+        value: ${{ jobs.create-matrix.outputs.job-matrix }}
+jobs:
+  create-matrix:
+    name: Create matrix
+    runs-on: ubuntu-latest
+    outputs:
+      job-matrix: ${{ steps.run-action.outputs.job-matrix }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - uses: ./.github/actions/create-matrix
+        with:
+          github-base-ref: ${{ github.base_ref }}
+          github-sha: ${{ github.sha }}
+        name: Create matrix action
+        id: run-action
+      - name: Action output echo
+        run: echo "${{ steps.run-action.outputs.job-matrix }}"

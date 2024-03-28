@@ -1,0 +1,19 @@
+name: Single deployment step
+
+on:
+  workflow_call:
+    inputs:
+      matrix-row:
+        required: true
+        type: string
+
+jobs:
+ deploy:
+    name: Deploy
+    strategy:
+      fail-fast: false
+      matrix:
+        directory: ${{ fromJSON(inputs.matrix-row) }}
+    uses: ./.github/workflows/workflow-proxy.yml
+    with:
+      directory: ${{matrix.directory}}

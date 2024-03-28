@@ -1,0 +1,38 @@
+name: Deployment
+#Should the depth of dependencies be >2, more steps need to be coopy-pasted into here
+ 
+on:
+  push:
+    branches:
+      - "your_branch"
+
+jobs:
+  create-matrix:
+    uses: ./.github/workflows/create-matrix.yml
+  deployment-step-1:
+    needs: [create-matrix]
+    if: | 
+      needs.create-matrix.outputs.job-matrix != '[]' && 
+      needs.create-matrix.outputs.job-matrix != '' &&
+      fromJSON(needs.create-matrix.outputs.job-matrix)[0] != ''
+    uses: ./.github/workflows/deployment-step.yml
+    with:
+      matrix-row: ${{ toJSON(fromJSON(needs.create-matrix.outputs.job-matrix)[0]) }}
+  deployment-step-2:
+    needs: [create-matrix, deployment-step-1]
+    if: | 
+      needs.create-matrix.outputs.job-matrix != '[]' && 
+      needs.create-matrix.outputs.job-matrix != '' &&
+      fromJSON(needs.create-matrix.outputs.job-matrix)[1] != ''
+    uses: ./.github/workflows/deployment-step.yml
+    with:
+      matrix-row: ${{ toJSON(fromJSON(needs.create-matrix.outputs.job-matrix)[1]) }}
+  deployment-step-3:
+    if: |
+      needs.create-matrix.outputs.job-matrix != '[]' && 
+      needs.create-matrix.outputs.job-matrix != '' && 
+      fromJSON(needs.create-matrix.outputs.job-matrix)[2] != ''
+    needs: [create-matrix, deployment-step-2]
+    uses: ./.github/workflows/deployment-step.yml
+    with:
+      matrix-row: ${{ toJSON(fromJSON(needs.create-matrix.outputs.job-matrix)) }}

@@ -1,0 +1,18 @@
+name: 'git-diff-based jobs matrix'
+description: 'Look for changes in the codebase to create the jobs matrix with package directories for terraform'
+inputs:
+  github-base-ref:
+    description: 'Base ref, used in case of pull requests'
+    required: true
+  github-event-before:
+    description: 'SHA of the previous commit on a branch, used in case of push'
+    required: true
+  github-sha:
+    description: 'SHA of the current commit'
+    required: true    
+outputs:
+  job-matrix:
+    description: 'Jobs matrix array composed of package directories (packages workspace subdirectories)'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
